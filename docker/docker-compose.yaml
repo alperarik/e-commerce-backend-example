@@ -1,0 +1,52 @@
+version: '2.2'
+
+services:
+  mongodb:
+    image: mongo:4.2.3-bionic
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=product
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      # named volumes
+      - mongodb:/data/db
+      - mongoconfig:/data/configdb
+  
+  mysql:
+    build:
+      context: .
+      dockerfile: mysql.dockerfile
+    container_name: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+        MYSQL_ROOT_USER: root
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: admin
+        MYSQL_PASSWORD: admin
+
+  rabbitmq:
+    build:
+      context: .
+      dockerfile: rabbitmq.dockerfile
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5672"]
+      interval: 5s
+      timeout: 15s
+      retries: 10
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+volumes:
+  # default dir on Ubuntu: /var/lib/docker/volumes
+  mongodb:
+  mongoconfig:
+  mysql:

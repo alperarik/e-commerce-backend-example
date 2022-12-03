@@ -1,0 +1,55 @@
+{
+    "exchanges": [
+        {
+            "name": "styx_topic",
+            "vhost": "/",
+            "type": "topic",
+            "durable": false,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        }
+    ],
+    "queues": [
+        {
+            "name": "memory",
+            "vhost": "/",
+            "durable": false,
+            "auto_delete": false,
+            "arguments": {}
+        },
+        {
+            "name": "cpu",
+            "vhost": "/",
+            "durable": false,
+            "auto_delete": false,
+            "arguments": {}
+        }
+    ],
+    "bindings": [
+        {
+            "source": "styx_topic",
+            "vhost": "/",
+            "destination": "memory",
+            "destination_type": "queue",
+            "routing_key": "styx.memory.#",
+            "arguments": {}
+        },
+        {
+            "source": "styx_topic",
+            "vhost": "/",
+            "destination": "cpu",
+            "destination_type": "queue",
+            "routing_key": "styx.cpu.#",
+            "arguments": {}
+        },
+        {
+            "source": "styx_topic",
+            "vhost": "/",
+            "destination": "etc",
+            "destination_type": "queue",
+            "routing_key": "etc.#",
+            "arguments": {}
+        }
+    ]
+}
